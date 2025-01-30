@@ -1,0 +1,162 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String?
+  age                  Int?
+  email                String   @unique
+  password             String?
+  userName             String   @unique
+  totalRank            Int      @default(1000)
+  solvedProblemDetails String[]
+  gender               String?
+  collegeName          String?
+  state                String?
+  country              String?
+  isAdmin              Boolean
+  googleLoginAccess    Boolean
+  profilePictureUrl    String
+  praticeCourseDetail praticeCourseDetailType
+}
+
+type praticeCourseDetailType{
+  c  CourseDetail
+  cpp CourseDetail
+  java CourseDetail
+  go CourseDetail
+}
+type CourseDetail{
+  participated Boolean @default(false)
+  review ReviewEnum @default(ZERO)
+  solvedProblemDetails String[]
+}
+
+enum ReviewEnum {
+  ZERO
+  ONE
+  TWO
+  THREE
+  FOUR
+  FIVE
+}
+
+model PraticeProblem {
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  problemName       String
+  description       String
+  constraint        String[]
+  language          Language
+  sampleInputOutput InputOutputType[]
+  testcases         InputOutputType[]
+  aboveCodeTemplate CodeTemplateType
+  belowCodeTemplate CodeTemplateType
+  middleCode        CodeTemplateType
+}
+
+model Contest {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  contestNo        Int      @unique
+  contestName      String
+  duration         Int
+  startTime        DateTime
+  problems         Int[]
+  status           String
+  noOfParticipated Int
+}
+
+type ContestInfo {
+  contestId String
+}
+
+type ProblemSetInfo {
+  problemId String
+}
+
+model testing {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  title     String
+  createdAt DateTime @default(now())
+}
+
+type Role {
+  User  Boolean
+  Admin Boolean
+}
+
+enum Language {
+  c
+  java
+  cpp
+  go
+}
+
+// type Test_Type{
+//   input String
+//   output String
+// }
+
+// model Problem_Set{
+//   id       String    @id @default(auto()) @map("_id") @db.ObjectId
+//   problem_no Int 
+//   like Int
+//   dislike Int
+
+// }
+type InputOutputType {
+  input  String
+  output String
+}
+
+enum categoryEnum {
+  ALGORITHMS
+  AI
+  CONCURRENCY
+}
+
+enum StatusEnum {
+  UNSOLVED
+  SOLVED
+}
+
+enum TopicEnum {
+  ARRAY
+  STRING
+  BINARYSEARCH
+  DYNAMICPROGRAMMING
+  GRAPH
+}
+
+type CodeTemplateType {
+  c    String
+  cpp  String
+  java String
+  go   String
+}
+
+model ProblemSet {
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  problemNo         Int               @unique
+  problemName       String
+  description       String
+  companies         String[]
+  like              Int
+  dislike           Int
+  sampleInputOutput InputOutputType[]
+  testcases         InputOutputType[]
+  constraint        String[]
+  topic             TopicEnum[]
+  accepted          Int
+  submission        Int
+  category          categoryEnum
+  aboveCodeTemplate CodeTemplateType
+  belowCodeTemplate CodeTemplateType
+  middleCode        CodeTemplateType
+}
