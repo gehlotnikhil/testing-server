@@ -6,6 +6,7 @@
     "build": "tsc",
     "dev": "tsc-watch --onSuccess \" npm run start \"",
     "start": "nodemon dist/index.js",
+    "git":"git add . && git commit -m 'first' && git push",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

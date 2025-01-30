@@ -448,7 +448,7 @@ router.post("/getpraticeproblemdetails", async (req: Request, res: Response): Pr
     console.log("ll");
 
 
-    const a = await prisma.praticeProblem.findFirst();
+    const a = await prisma.praticeProblem.findMany({select:{language:true}});
     console.log("t-",a);
     
     res.send({success})

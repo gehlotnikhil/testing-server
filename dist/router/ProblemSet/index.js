@@ -385,7 +385,7 @@ router.post("/getpraticeproblemdetails", (req, res) => __awaiter(void 0, void 0,
         console.log("Prisma Client:", prisma);
         console.log("Prisma Model:", prisma.praticeProblem);
         console.log("ll");
-        const a = yield prisma.praticeProblem.findFirst();
+        const a = yield prisma.praticeProblem.findMany({ select: { language: true } });
         console.log("t-", a);
         res.send({ success });
     }
