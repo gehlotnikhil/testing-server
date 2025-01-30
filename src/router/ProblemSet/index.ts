@@ -442,8 +442,7 @@ console.log("q2");
 router.post("/getpraticeproblemdetails", async (req: Request, res: Response): Promise<any> => {
   let success = false;
   try {
-    console.log("Prisma Client:", prisma);
-    console.log("Prisma Model:", prisma.praticeProblem);
+   
 
     console.log("ll");
 
@@ -451,7 +450,7 @@ router.post("/getpraticeproblemdetails", async (req: Request, res: Response): Pr
     const a = await prisma.praticeProblem.findMany({select:{language:true}});
     console.log("t-",a);
     
-    res.send({success})
+    res.send({success,a})
     } catch (error) {
     console.error(error); 
     return res.status(500).send({ success, error });

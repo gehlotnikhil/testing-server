@@ -382,12 +382,10 @@ console.log("q2");
 router.post("/getpraticeproblemdetails", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let success = false;
     try {
-        console.log("Prisma Client:", prisma);
-        console.log("Prisma Model:", prisma.praticeProblem);
         console.log("ll");
         const a = yield prisma.praticeProblem.findMany({ select: { language: true } });
         console.log("t-", a);
-        res.send({ success });
+        res.send({ success, a });
     }
     catch (error) {
         console.error(error);
