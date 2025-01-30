@@ -378,20 +378,16 @@ router.post("/getproblemdetails/:pageno?", async (req: Request, res: Response): 
   }
 }
 );
-router.post("/getpraticeproblemdetails", async (req: Request, res: Response): Promise<any> => {
-  let success = false;
-  try {
-    console.log("Prisma Client:", prisma);
-    console.log("Prisma Model:", prisma.praticeProblem);
+// const response = await axios.post(`${ServerUrl}/api/user/tokentodata`, { token }, {
 
-    console.log("ll");
-    
+let a = `
+ 
     const { token, language } = req.body;
     if (!token) {
       return res.status(400).send({ success, msg: "Token is required" });
     }
 
-    const response = await axios.post(`${ServerUrl}/api/user/tokentodata`, { token }, {
+    ---------here---------------
       headers: { "Content-Type": "application/json" },
     });
 console.log("q1-response-",response);
@@ -440,8 +436,24 @@ console.log("q2");
 
     success = true;
     return res.send({ success, result: problems, totalCount: problems.length, entireCount });
-  } catch (error) {
-    console.error(error);
+ 
+
+`;
+router.post("/getpraticeproblemdetails", async (req: Request, res: Response): Promise<any> => {
+  let success = false;
+  try {
+    console.log("Prisma Client:", prisma);
+    console.log("Prisma Model:", prisma.praticeProblem);
+
+    console.log("ll");
+
+
+    const a = await prisma.praticeProblem.findFirst();
+    console.log("t-",a);
+    
+    res.send({success})
+    } catch (error) {
+    console.error(error); 
     return res.status(500).send({ success, error });
   }
 });
