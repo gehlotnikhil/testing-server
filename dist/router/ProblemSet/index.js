@@ -377,7 +377,7 @@ console.log("q2");
     success = true;
     return res.send({ success, result: problems, totalCount: problems.length, entireCount });
  
-
+ 
 `;
 router.post("/getpraticeproblemdetails", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let success = false;
