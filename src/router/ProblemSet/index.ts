@@ -442,17 +442,63 @@ console.log("q2");
 router.post("/getpraticeproblemdetails", async (req: Request, res: Response): Promise<any> => {
   let success = false;
   try {
-   
 
-    console.log("ll");
+    const { token, language } = req.body;
+    if (!token) {
+      return res.status(400).send({ success, msg: "Token is required" });
+    }
+
+    const response = await axios.post(`${ServerUrl}/api/user/tokentodata`, { token }, {
+      headers: { "Content-Type": "application/json" },
+    });
+    console.log("q1-response-", response);
+    console.log("q1");
+
+    if (!response.data.success) {
+      return res.status(401).send({ success, msg: "Invalid token" });
+    }
+    console.log("q2");
+
+    const data = response.data;
+    console.log("q3");
 
 
-    const a = await prisma.praticeProblem.findMany({select:{language:true}});
-    console.log("t-",a);
-    
-    res.send({success,a})
-    } catch (error) {
-    console.error(error); 
+    const allProblems = await prisma.praticeProblem.findMany({ select: { language: true } });
+    console.log("q4-allproblem-", allProblems);
+    console.log("q4");
+
+    const entireCount = allProblems.reduce((acc, problem) => {
+      acc[problem.language] = (acc[problem.language] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    console.log("q5-entirecount - ", entireCount);
+    console.log("q5");
+    let problems = await prisma.praticeProblem.findMany({
+      where: { language },
+      select: {
+        id: true,
+        problemName: true,
+        language: true,
+      },
+    });
+
+    console.log("q6-problems - ", problems);
+    console.log("q6");
+    const solvedProblemDetails = data.result.praticeCourseDetail[language]?.solvedProblemDetails || [];
+    console.log("q7");
+
+    problems = problems.map((problem) => ({
+      ...problem,
+      status: solvedProblemDetails.includes(problem.id) ? "SOLVED" : "UNSOLVED",
+    }));
+    console.log("q8-final ", problems);
+    console.log("q8");
+
+    success = true;
+    return res.send({ success, result: problems, totalCount: problems.length, entireCount });
+  } catch (error) {
+    console.error(error);
     return res.status(500).send({ success, error });
   }
 });
